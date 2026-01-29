@@ -1,24 +1,29 @@
-Tasks
-2. Secured and monitored web infrastructure
-On a whiteboard, design a three server web infrastructure that hosts the website www.foobar.com, it must be secured, serve encrypted traffic, and be monitored.
+What happens:
 
-Requirements:
+User accesses https://www.foobar.com.
 
-You must add:
+Firewall filters allowed traffic (443).
 
-3 firewalls
-1 SSL certificate to serve www.foobar.com over HTTPS
-3 monitoring clients (data collector for Sumologic or other monitoring services)
-You must be able to explain some specifics about this infrastructure:
+Load balancer decrypts HTTPS (SSL termination) and distributes requests to web servers.
 
-For every additional element, why you are adding it
-What are firewalls for
-Why is the traffic served over HTTPS
-What monitoring is used for
-How the monitoring tool is collecting data
-Explain what to do if you want to monitor your web server QPS
-You must be able to explain what the issues are with this infrastructure:
+Web servers pass requests to app servers.
 
-Why terminating SSL at the load balancer level is an issue
-Why having only one MySQL server capable of accepting writes is an issue
-Why having servers with all the same components (database, web server and application server) might be a problem
+App servers interact with DB Primary for writes and DB Replica for reads.
+
+Monitoring agents collect metrics and logs, send them to centralized monitoring tool.
+
+Key points:
+
+Traffic is encrypted for the user.
+
+Firewalls protect servers.
+
+Monitoring tracks server health, performance, and QPS.
+
+Issues:
+
+SSL termination at LB means internal traffic is unencrypted.
+
+DB Primary is still a SPOF.
+
+Servers still run multiple components together → harder to scale or maintain.

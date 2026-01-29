@@ -1,25 +1,31 @@
-On a whiteboard, design a three server web infrastructure that hosts the website www.foobar.com.
+What happens:
 
-Requirements:
+User requests www.foobar.com.
 
-You must add:
+DNS points to Load Balancer.
 
-1 load-balancer (HAproxy)
-2 servers (each containing the following)
+Load Balancer distributes traffic using round-robin:
 
-1 web server (Nginx)
-1 application server
-1 set of application files (your code base)
-1 database (MySQL)
-You must be able to explain some specifics about this infrastructure:
+Request 1 → Server 1
 
-For every additional element, why you are adding it
-What distribution algorithm your load balancer is configured with and how it works
-Is your load-balancer enabling an Active-Active or Active-Passive setup, explain the difference between both
-How a database Primary-Replica (Master-Slave) cluster works
-What is the difference between the Primary node and the Replica node in regard to the application
-You must be able to explain what the issues are with this infrastructure:
+Request 2 → Server 2
 
-Where are SPOF
-Security issues (no firewall, no HTTPS)
-No monitoring
+Each server has a complete stack:
+
+Nginx handles HTTP.
+
+App server executes code.
+
+MySQL responds (Server 1 = Primary for writes, Server 2 = Replica for reads).
+
+Responses sent back to user via load balancer.
+
+Key points:
+
+Reduces load on a single server.
+
+Still SPOF on DB Primary and Load Balancer.
+
+Active–Active LB: both servers handle traffic.
+
+Replica DB handles reads only.

@@ -1,10 +1,31 @@
-Requirements:
+What happens:
 
-You must add:
+User request hits either LB (cluster for high availability).
 
-1 server
-1 load-balancer (HAproxy) configured as cluster with the other one
-Split components (web server, application server, database) with their own server
-You must be able to explain some specifics about this infrastructure:
+LB forwards to any web server.
 
-For every additional element, why you are adding it
+Web server handles HTTP requests, passes dynamic requests to application servers.
+
+Application servers execute code and interact with:
+
+DB Primary (writes)
+
+DB Replica (reads)
+
+Response is sent back through the web server → load balancer → user.
+
+Key points:
+
+Each layer is isolated:
+
+Web servers → scale horizontally
+
+App servers → scale independently
+
+DB servers → separate, can replicate
+
+Load balancer cluster removes SPOF at entry point.
+
+Easier maintenance, better security, better scaling.
+
+Still need HA for DB writes, monitoring, SSL end-to-end.
